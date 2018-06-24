@@ -43,6 +43,8 @@ var deckOfCards = document.querySelectorAll('.card');
 
 var openCards = [];
 
+var checkForMatch = [];
+
 deckOfCards.forEach( function(singleCard){
 	singleCard.addEventListener('click',function(e){
  	
@@ -52,7 +54,39 @@ deckOfCards.forEach( function(singleCard){
 			openCards.push(singleCard);
 			singleCard.classList.add('open', 'show');
 		}
+      
+      
+		// check for match --> function
+		openCards.forEach(function(clickedCard){
 
+			var cardDataSet = clickedCard.querySelector('i');
+			//console.log(cardDataSet);
+
+	        var dataAtt =  cardDataSet.dataset.additionalInfo;
+	 		//console.log(dataAtt);
+
+	 		checkForMatch.push(dataAtt);
+		});
+  		
+  		//console.log(checkForMatch[0]);
+  		console.log(checkForMatch.length);
+
+  		for(var i=0; i<checkForMatch.length-1;i++){
+  			if(checkForMatch[i]==checkForMatch[i+1]){
+  				console.log('they match');
+  			}else {
+  				console.log('try again');
+  			}
+  			
+
+  		}
+  		checkForMatch = [];
+		// ---------------
+ 		/*
+		if(){
+
+		} else {
+*/
       // close the cards 
 
       setTimeout(function(){
@@ -63,6 +97,11 @@ deckOfCards.forEach( function(singleCard){
 
       },1000);
 		
+		
+
+
+
 	});
+
 
 });
