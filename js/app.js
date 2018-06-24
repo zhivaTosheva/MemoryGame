@@ -1,7 +1,15 @@
 /*
  * Create a list that holds all of your cards
  */
-
+ 
+  var cards =["fa fa-diamond","fa fa-diamond",
+  			  "fa fa-paper-plane-o","fa fa-paper-plane-o",
+  			  "fa fa-anchor","fa fa-anchor",
+  			  "fa fa-bolt","fa fa-bolt",
+  			  "fa fa-cube","fa fa-cube",
+  			  "fa fa-leaf","fa fa-leaf",
+  			  "fa fa-bicycle","fa fa-bicycle",
+  			  "fa fa-bomb","fa fa-bomb"];
 
 /*
  * Display the cards on the page
@@ -9,6 +17,11 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+function generateCard(card){
+	var cardTemplate = '<li class="card"><i class="'+ card +'" data-additional-info="'+card+'"></i></li>';
+	return cardTemplate;
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -25,6 +38,16 @@ function shuffle(array) {
     return array;
 }
 
+function buildCards() {
+	var deck = document.querySelector('.deck');
+	var cardHTML = shuffle(cards).map(function(card){
+		return generateCard(card);
+
+	});
+	deck.innerHTML = cardHTML.join('');
+}
+
+buildCards();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -60,10 +83,10 @@ deckOfCards.forEach( function(singleCard){
 		openCards.forEach(function(clickedCard){
 
 			var cardDataSet = clickedCard.querySelector('i');
-			//console.log(cardDataSet);
+			console.log(cardDataSet);
 
 	        var dataAtt =  cardDataSet.dataset.additionalInfo;
-	 		//console.log(dataAtt);
+	 		console.log(dataAtt);
 
 	 		checkForMatch.push(dataAtt);
 		});
@@ -71,24 +94,38 @@ deckOfCards.forEach( function(singleCard){
   		//console.log(checkForMatch[0]);
   		console.log(checkForMatch.length);
 
-  		for(var i=0; i<checkForMatch.length-1;i++){
+  		for(var i=0; i<checkForMatch.length - 1;i++){
   			if(checkForMatch[i]==checkForMatch[i+1]){
   				console.log('they match');
+
+  				openCards.forEach(function(matchedCard){
+  					matchedCard.classList.add('match');
+  				});
+  				
+  				 openCards = [];
+  				 //checkForMatch = [];
+
   			}else {
-  				console.log('try again');
+		  			console.log('try again');
+
+					setTimeout(function(){
+			      	openCards.forEach(function(notMatchedCards){
+			      		notMatchedCards.classList.remove('open','show');
+			      	});
+			      	  openCards = [];
+  				 	//checkForMatch = [];
+
+			      },1000);
+
   			}
   			
 
   		}
   		checkForMatch = [];
 		// ---------------
- 		/*
-		if(){
-
-		} else {
-*/
+ 		
       // close the cards 
-
+/*
       setTimeout(function(){
       	openCards.forEach(function(e){
       		singleCard.classList.remove('open','show');
@@ -97,8 +134,8 @@ deckOfCards.forEach( function(singleCard){
 
       },1000);
 		
-		
-
+	
+*/
 
 
 	});
