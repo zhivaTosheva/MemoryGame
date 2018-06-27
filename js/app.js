@@ -64,18 +64,50 @@ buildCards();
 
 var deckOfCards = document.querySelectorAll('.card');
 
+
+
 var openCards = [];
 
 var checkForMatch = [];
 
+var countMoves = 0;
+
+var allMatchedCards = [];
+
 deckOfCards.forEach( function(singleCard){
 	singleCard.addEventListener('click',function(e){
+
+		//disable multiclick 
+
+		//singleCard.classList.setAttribute("disabled", "disabled");
  	
+     // count moves 
+      countMoves++;
+      console.log(countMoves);
+      var countOfMoves = document.querySelector(".moves");
+      console.log(countOfMoves);
+      countOfMoves.innerHTML = countMoves;
+
+
+  
  	  // open only two cards
 
 		if(openCards.length<2){
+			
+			//prevent double click on the same card
+			
+			if(singleCard.classList.contains('open')){
+				
+				return;
+
+			} else {
+			
 			openCards.push(singleCard);
 			singleCard.classList.add('open', 'show');
+			//singleCard.setAttribute("disabled","disabled");
+			//e.preventDefault();
+			}
+
 		}
       
       
@@ -83,29 +115,55 @@ deckOfCards.forEach( function(singleCard){
 		openCards.forEach(function(clickedCard){
 
 			var cardDataSet = clickedCard.querySelector('i');
-			console.log(cardDataSet);
+			//console.log(cardDataSet);
 
 	        var dataAtt =  cardDataSet.dataset.additionalInfo;
-	 		console.log(dataAtt);
+	 		//console.log(dataAtt);
 
 	 		checkForMatch.push(dataAtt);
 		});
   		
   		//console.log(checkForMatch[0]);
-  		console.log(checkForMatch.length);
+  		//console.log(checkForMatch.length);
+
+  		// if only one card is opened , close it 
+  			if(checkForMatch.length===1){
+
+  				console.log("The opened card is only one. You need to open two");
+
+  				setTimeout(function(){
+			      	openCards.forEach(function(notMatchedCards){
+			      		notMatchedCards.classList.remove('open','show');
+			      	});
+			      	  openCards = [];
+  				 	//checkForMatch = [];
+
+			      },1000);
+
+  			} else if (checkForMatch.length > 1){
+
+
+  		// if two cards are opened, check for match
 
   		for(var i=0; i<checkForMatch.length - 1;i++){
+
+  		
   			if(checkForMatch[i]==checkForMatch[i+1]){
   				console.log('they match');
 
   				openCards.forEach(function(matchedCard){
   					matchedCard.classList.add('match');
+  					allMatchedCards.push(checkForMatch[i]);
+
+
   				});
   				
   				 openCards = [];
   				 //checkForMatch = [];
 
   			}else {
+
+  				   // close the cards
 		  			console.log('try again');
 
 					setTimeout(function(){
@@ -121,7 +179,11 @@ deckOfCards.forEach( function(singleCard){
   			
 
   		}
+
+  	}
   		checkForMatch = [];
+
+
 		// ---------------
  		
       // close the cards 
@@ -137,7 +199,10 @@ deckOfCards.forEach( function(singleCard){
 	
 */
 
+// inside the true match should be included second if for checking if only one card has been opened. 
+// If it is, then close it. 
 
+// Prevent double click - maybe add and remove additional data attrr that will disable the click event
 	});
 
 
