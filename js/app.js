@@ -110,6 +110,18 @@ var startButton = document.querySelector("#start-game-button");
 
 var deckOverlay = document.querySelector(".deck");
 
+var popUp = document.querySelector(".end-game-pop-up");
+
+var scoreMessage = document.querySelector(".game-results");
+
+var timePeriod =  document.querySelector('.timer');
+
+var timeEndScore = document.querySelector('.timer').innerHTML;
+
+var yesGameAgainButton = document.querySelector(".yes-restart-game");
+
+var noGameAgainButton = document.querySelector(".no-dont-restart");
+
 var openCards = [];
 
 var checkForMatch = [];
@@ -126,6 +138,8 @@ var secondsForEveryMinute =0;
 
 var Timer;
 
+
+//scoreMessage.innerHTML = "Test";
 
 //start the game with clickin go the button and removing the overlay
 
@@ -251,7 +265,7 @@ deckOfCards.forEach( function(singleCard){
 			      	  openCards = [];
   				 	//checkForMatch = [];
 
-			      },1000);
+			      },800);
 
   			}
   			
@@ -261,27 +275,64 @@ deckOfCards.forEach( function(singleCard){
   	}
   		checkForMatch = [];
 
+// Check for end of the game - all cards should have been matched 
 
-		if(allMatchedCards.length=cards.length){
+		if(allMatchedCards.length===cards.length){
 		  console.log("End of game");
 
+			//Stop the timer
+
+           
+            var finalTime = timeEndScore;
+
+			clearTimeout(Timer);
+
 		  // put overlay so the user will know the game ended
-		  var deckOverlay = document.querySelector(".deck");
+		   deckOverlay.classList.add(".pointer_event");
 
-		  // Stop the timer 
+		  //dispaly the pop up 
+		 
+		  popUp.style.display="block"; 
 
-		  clearTimeout(Timer);
+		  //The the score state after the game 
+
+		  scoreMessage.innerHTML = "You won for the time period of " + finalTime + " with " + countOfMoves.innerHTML +" moves made and " + "stars" + " star rating";
+
+          // If the customer pickes yes and wants to play again re-load the game 
+
+          yesGameAgainButton.addEventListener("click",function(e){
+
+          	window.location.reload();
+            // Hide the pop up 
+
+            popUp.style.display="none"; 
+
+
+          });
+
+          // If the customer picks no , close the pop-up and hide the deck
+
+          noGameAgainButton.addEventListener('click',function(e){
+
+          	 deckOverlay.classList.add("pointer_event");
+
+             popUp.style.display="none";
+
+          });
+
 
 		}
-
+    
 
 	});
 
+    
 });
 
- // Check for end of the game - all cards should have been matched 
+ 
 
 
 //-------------------
-
+  // 1. Pop up box 
+  // 2. Starts
 //-------------------------
