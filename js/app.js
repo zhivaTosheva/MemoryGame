@@ -47,6 +47,48 @@ function buildCards() {
 	deck.innerHTML = cardHTML.join('');
 }
 
+
+// Count time function
+
+		function myTimer() {
+		    countOfSeconds++;
+
+		    if(countOfSeconds<10){
+
+		    	document.querySelector('.timer').innerHTML = "00:" + "0" + countOfSeconds;
+
+		    } else if(countOfSeconds>=10 && countOfSeconds<60){
+
+		    	document.querySelector('.timer').innerHTML = "00:" + countOfSeconds;
+
+		    }else {
+
+		    	middleTime = Math.floor(countOfSeconds/60);
+
+
+		    	if(middleTime < 3){
+			    	secondsForEveryMinute = countOfSeconds - middleTime*60;
+
+			    	if(secondsForEveryMinute<10){
+			    			document.querySelector('.timer').innerHTML = "0" + middleTime + ":" + "0" + secondsForEveryMinute;
+			    	} else {
+
+							document.querySelector('.timer').innerHTML = "0" + middleTime +":" + secondsForEveryMinute;
+		    			}
+
+		    	} else {
+
+		    		document.querySelector('.timer').innerHTML = "end"
+		    	}
+		    	
+		    }
+		}
+
+
+
+
+
+
 buildCards();
 
 /*
@@ -64,7 +106,9 @@ buildCards();
 
 var deckOfCards = document.querySelectorAll('.card');
 
+var startButton = document.querySelector("#start-game-button");
 
+var deckOverlay = document.querySelector(".deck");
 
 var openCards = [];
 
@@ -74,13 +118,47 @@ var countMoves = 0;
 
 var allMatchedCards = [];
 
+var countOfSeconds = 0;
+
+var middleTime = 0;
+
+var secondsForEveryMinute =0;
+
+var Timer;
+
+
+//start the game with clickin go the button and removing the overlay
+
+startButton.addEventListener('click',function(e){
+    
+
+     // remove the overlay and start the game 
+     
+
+     if(deckOverlay.classList.contains("pointer_event")){
+
+
+     deckOverlay.classList.remove("pointer_event");
+
+     // enable the time count 
+     
+ 		  Timer = setInterval(myTimer, 1000);
+    
+
+}else{
+
+	return;
+}
+});
+
+
+
+
 deckOfCards.forEach( function(singleCard){
 	singleCard.addEventListener('click',function(e){
 
-		//disable multiclick 
-
-		//singleCard.classList.setAttribute("disabled", "disabled");
- 	
+     
+     
      // count moves 
       countMoves++;
       console.log(countMoves);
@@ -95,7 +173,7 @@ deckOfCards.forEach( function(singleCard){
 		if(openCards.length<2){
 			
 			//prevent double click on the same card
-			
+
 			if(singleCard.classList.contains('open')){
 				
 				return;
@@ -184,26 +262,26 @@ deckOfCards.forEach( function(singleCard){
   		checkForMatch = [];
 
 
-		// ---------------
- 		
-      // close the cards 
-/*
-      setTimeout(function(){
-      	openCards.forEach(function(e){
-      		singleCard.classList.remove('open','show');
-      	});
-      	  openCards.pop();
+		if(allMatchedCards.length=cards.length){
+		  console.log("End of game");
 
-      },1000);
-		
-	
-*/
+		  // put overlay so the user will know the game ended
+		  var deckOverlay = document.querySelector(".deck");
 
-// inside the true match should be included second if for checking if only one card has been opened. 
-// If it is, then close it. 
+		  // Stop the timer 
 
-// Prevent double click - maybe add and remove additional data attrr that will disable the click event
+		  clearTimeout(Timer);
+
+		}
+
+
 	});
 
-
 });
+
+ // Check for end of the game - all cards should have been matched 
+
+
+//-------------------
+
+//-------------------------

@@ -49,6 +49,8 @@ h1 {
     justify-content: space-between;
     align-items: center;
     margin: 0 0 3em;
+    position: relative;
+    z-index: 1;
 }
 
 .deck .card {
@@ -87,7 +89,8 @@ h1 {
 
 .score-panel {
     text-align: left;
-    width: 345px;
+    width: 400px;
+    height: 40px;
     margin-bottom: 10px;
 }
 
@@ -112,4 +115,27 @@ h1 {
     float:right;
     display: flex;
     padding: 0 20px 0 0px;
+}
+
+#start-game-button{
+    width: 25%;
+    height: 50%;
+    float: left;
+    background-color: white;
+    display: flex;
+    margin: 0 10 0 0;
+
+}
+
+#text_start_button{
+    display: inline-block;
+    padding: 0 0px 0 30px;
+    font-weight: 700;
+
+}
+
+
+.pointer_event{
+    pointer-events: none;
+    opacity: 0.5;
 }
