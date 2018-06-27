@@ -107,3 +107,9 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.timer{
+    float:right;
+    display: flex;
+    padding: 0 20px 0 0px;
+}
