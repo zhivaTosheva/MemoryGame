@@ -66,7 +66,7 @@ function buildCards() {
 		    	middleTime = Math.floor(countOfSeconds/60);
 
 
-		    	if(middleTime < 3){
+		    	if(middleTime < 4){
 			    	secondsForEveryMinute = countOfSeconds - middleTime*60;
 
 			    	if(secondsForEveryMinute<10){
@@ -78,15 +78,49 @@ function buildCards() {
 
 		    	} else {
 
-		    		document.querySelector('.timer').innerHTML = "end"
+		    		document.querySelector('.timer').innerHTML = "end";
+
 		    	}
 		    	
 		    }
 		}
 
+function ConfirmationButton(button,popUpTarget ){
+    
+     		button.addEventListener("click", function(e) {
+
+                window.location.reload();
+
+                // Hide the pop up 
+
+                popUpTarget.style.display = "none";
 
 
+            });
 
+}
+
+function RefuseButton(button,popUpTarget,deck){
+
+	button.addEventListener('click', function(e) {
+
+                // add the overlay again so the user will now he cannot play more
+                deck.classList.add("pointer_event");
+
+                // hide the winning pop-up
+                popUpTarget.style.display = "none";
+
+                // disable the start button so that the user will not be able to click it and remove the 
+                // overlay and start the timer again 
+
+                document.querySelector("#start-game-button").classList.add('pointer_event');
+
+            });
+
+}
+
+
+  
 
 
 buildCards();
@@ -112,15 +146,23 @@ var deckOverlay = document.querySelector(".deck");
 
 var popUp = document.querySelector(".end-game-pop-up");
 
+var popUpEndTime = document.querySelector(".end-time-pop-up");
+
 var scoreMessage = document.querySelector(".game-results");
 
 var yesGameAgainButton = document.querySelector(".yes-restart-game");
 
 var noGameAgainButton = document.querySelector(".no-dont-restart");
 
+var yesGameAgainButtonTime = document.querySelector(".yes-restart-game-time");
+
+var noGameAgainButtonTime = document.querySelector(".no-dont-restart-time");
+
 var starElements = document.querySelectorAll(".fa-star");
 
 var reload = document.querySelector(".restart");
+
+var countOfMoves = document.querySelector(".moves");
 
 var openCards = [];
 
@@ -140,229 +182,286 @@ var currentStarCount = 0 ;
 
 var Timer;
 
+var currentTimeValue =0;
+
 
 //scoreMessage.innerHTML = "Test";
 
 //start the game with clickin go the button and removing the overlay
 
-startButton.addEventListener('click',function(e){
-    
-
-     // remove the overlay and start the game 
-     
-
-     if(deckOverlay.classList.contains("pointer_event")){
+startButton.addEventListener('click', function(e) {
 
 
-     deckOverlay.classList.remove("pointer_event");
+    // remove the overlay and start the game 
 
-     // enable the time count 
-     
- 		  Timer = setInterval(myTimer, 1000);
-    
 
-}else{
+    if (deckOverlay.classList.contains("pointer_event")) {
 
-	return;
-}
+
+        deckOverlay.classList.remove("pointer_event");
+
+        // enable the time count 
+
+        Timer = setInterval(myTimer, 1000);
+
+
+    } else {
+
+        return;
+    }
 });
 
 
-reload.addEventListener('click',function(e){
+reload.addEventListener('click', function(e) {
 
-	window.location.reload();
+    window.location.reload();
 
 });
 
 
 
-deckOfCards.forEach( function(singleCard){
-	singleCard.addEventListener('click',function(e){
 
-     
-     
-     // count moves 
-      countMoves++;
-      console.log(countMoves);
-      var countOfMoves = document.querySelector(".moves");
-      console.log(countOfMoves);
-      countOfMoves.innerHTML = countMoves;
-      
-      if(countMoves === 16){
-  			starElements[0].classList.remove('fa-star');
-  			currentStarCount = 4;
+deckOfCards.forEach(function(singleCard) {
+    singleCard.addEventListener('click', function(e) {
 
+        
+       // set move count and star update
+		
+        countMoves++;
+        console.log(countMoves);
+        var countOfMoves = document.querySelector(".moves");
+        console.log(countOfMoves);
+        countOfMoves.innerHTML = countMoves;
 
-  		}else if(countMoves === 24){
-  			starElements[1].classList.remove('fa-star');
-  			currentStarCount = 3;
-
-  		}else if(countMoves === 28 ){
-
-  			starElements[2].classList.remove('fa-star');
-  			currentStarCount = 2;
-
-  		}else if(countMoves === 34){
-  			starElements[3].classList.remove('fa-star');
-  			currentStarCount = 1;
-  		}
+        if (countMoves === 16) {
+            starElements[0].classList.remove('fa-star');
+            currentStarCount = 4;
 
 
-  
- 	  // open only two cards
+        } else if (countMoves === 24) {
+            starElements[1].classList.remove('fa-star');
+            currentStarCount = 3;
 
-		if(openCards.length<2){
-			
-			//prevent double click on the same card
+        } else if (countMoves === 28) {
 
-			if(singleCard.classList.contains('open')){
-				
-				return;
+            starElements[2].classList.remove('fa-star');
+            currentStarCount = 2;
 
-			} else {
-			
-			openCards.push(singleCard);
-			singleCard.classList.add('open', 'show');
-			//singleCard.setAttribute("disabled","disabled");
-			//e.preventDefault();
-			}
-
-		}
-      
-      
-		// check for match --> function
-		openCards.forEach(function(clickedCard){
-
-			var cardDataSet = clickedCard.querySelector('i');
-			//console.log(cardDataSet);
-
-	        var dataAtt =  cardDataSet.dataset.additionalInfo;
-	 		//console.log(dataAtt);
-
-	 		checkForMatch.push(dataAtt);
-		});
-  		
-  		//console.log(checkForMatch[0]);
-  		//console.log(checkForMatch.length);
-
-  		// if only one card is opened , close it 
-  			if(checkForMatch.length===1){
-
-  				console.log("The opened card is only one. You need to open two");
-
-  				setTimeout(function(){
-			      	openCards.forEach(function(notMatchedCards){
-			      		notMatchedCards.classList.remove('open','show');
-			      	});
-			      	  openCards = [];
-  				 	//checkForMatch = [];
-
-			      },1000);
-
-  			} else if (checkForMatch.length > 1){
+        } else if (countMoves === 34) {
+            starElements[3].classList.remove('fa-star');
+            currentStarCount = 1;
+        }
 
 
-  		// if two cards are opened, check for match
 
-  		for(var i=0; i<checkForMatch.length - 1;i++){
+        // open only two cards
 
-  		
-  			if(checkForMatch[i]==checkForMatch[i+1]){
-  				console.log('they match');
+        if (openCards.length < 2) {
 
-  				openCards.forEach(function(matchedCard){
-  					matchedCard.classList.add('match');
-  					allMatchedCards.push(checkForMatch[i]);
+            //prevent double click on the same card
 
+            if (singleCard.classList.contains('open')) {
 
-  				});
-  				
-  				 openCards = [];
-  				 //checkForMatch = [];
+                return;
 
-  			}else {
+            } else {
 
-  				   // close the cards
-		  			console.log('try again');
+                openCards.push(singleCard);
+                singleCard.classList.add('open', 'show');
+                
+            }
 
-					setTimeout(function(){
-			      	openCards.forEach(function(notMatchedCards){
-			      		notMatchedCards.classList.remove('open','show');
-			      	});
-			      	  openCards = [];
-  				 	//checkForMatch = [];
-
-			      },1000);
-
-  			}
-  			
-
-  		}
-
-  	}
-  		checkForMatch = [];
+        }
 
 
-// Check for end of the game - all cards should have been matched 
+        // check for match 
+        openCards.forEach(function(clickedCard) {
 
-		if(allMatchedCards.length===cards.length){
-		  console.log("End of game");
-
-			//Stop the timer
-
-
-			clearTimeout(Timer);
-
-		  // put overlay so the user will know the game ended
-		   deckOverlay.classList.add('pointer_event');
-
-		  //dispaly the pop up 
-		 
-		  popUp.style.display="block"; 
-
-		  //The the score state after the game 
-
-		  scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML +" moves made and " + " star rating of " + currentStarCount;
-
-          // If the customer pickes yes and wants to play again re-load the game 
-
-          yesGameAgainButton.addEventListener("click",function(e){
-
-          	window.location.reload();
+            var cardDataSet = clickedCard.querySelector('i');
             
-            // Hide the pop up 
+            var dataAtt = cardDataSet.dataset.additionalInfo;
+            
+            // use the checkForMatch array to add the data attributes and to compare them
 
-            popUp.style.display="none"; 
-
-
-          });
-
-          // If the customer picks no , close the pop-up and hide the deck
-
-          noGameAgainButton.addEventListener('click',function(e){
-
-          	// add the overlay again so the user will now he cannot play more
-          	 deckOverlay.classList.add("pointer_event");
-
-          	// hide the winning pop-up
-             popUp.style.display="none";
-
-             // disable the start button so that the user will not be able to click it and remove the 
-             // overlay and start the timer again 
-
-             document.querySelector(".start-game-button").classList.add('pointer_event');
-
-          });
-
-
-		}
+            checkForMatch.push(dataAtt);
+        });
     
+        // if only one card is opened , close it 
+        if (checkForMatch.length === 1) {
 
-	});
+            console.log("The opened card is only one. You need to open two");
 
-    
+            
+      
+            setTimeout(function() {
+                openCards.forEach(function(notMatchedCards) {
+                    notMatchedCards.classList.remove('open', 'show');
+                });
+                openCards = [];
+
+            }, 1200);
+
+            
+
+        } else if (checkForMatch.length > 1) {
+
+
+            // if two cards are opened, check for match
+
+            for (var i = 0; i < checkForMatch.length - 1; i++) {
+
+
+                if (checkForMatch[i] == checkForMatch[i + 1]) {
+                    console.log('they match');
+
+                    openCards.forEach(function(matchedCard) {
+                        matchedCard.classList.add('match');
+
+                        // Add the founc matched elements to the final allMatchedCards array
+                        allMatchedCards.push(checkForMatch[i]);
+
+
+                    });
+
+                    // Clean the array to start new match anew
+                    openCards = [];
+                   
+
+                } else {
+
+                    // close the cards
+                    console.log('try again');
+
+                    setTimeout(function() {
+                        openCards.forEach(function(notMatchedCards) {
+                            notMatchedCards.classList.remove('open', 'show');
+                        });
+                        openCards = [];
+
+                    }, 1200);
+
+                }
+
+
+            }
+
+        }
+        checkForMatch = [];
+
+
+
+        // Check if the time has ended. If yes, show pop-up with the correct message
+        currentTimeValue = document.querySelector(".timer").innerHTML;
+
+        if (currentTimeValue == 'end') {
+
+            console.log("end time");
+            clearTimeout(Timer);
+            deckOverlay.classList.add('pointer_event');
+
+            popUpEndTime.style.display = "block";
+
+            ConfirmationButton(yesGameAgainButtonTime,popUpEndTime);
+            RefuseButton(noGameAgainButtonTime,popUpEndTime,deckOverlay);
+
+  /*
+            yesGameAgainButtonTime.addEventListener("click", function(e) {
+
+                window.location.reload();
+
+                // Hide the pop up 
+
+                popUpEndTime.style.display = "none";
+
+
+            });
+
+            // If the customer picks no , close the pop-up and hide the deck under the overlay
+
+            noGameAgainButtonTime.addEventListener('click', function(e) {
+
+                // add the overlay again so the user will now he cannot play more
+                deckOverlay.classList.add("pointer_event");
+
+                // hide the winning pop-up
+                popUpEndTime.style.display = "none";
+
+                // disable the start button so that the user will not be able to click it and remove the 
+                // overlay and start the timer again 
+
+                document.querySelector("#start-game-button").classList.add('pointer_event');
+
+            });
+
+*/
+
+
+
+        }
+		
+
+		// Check for end of the game - all cards should have been matched 
+        if (allMatchedCards.length === cards.length) {
+            console.log("End of game");
+
+            //Stop the timer
+
+
+            clearTimeout(Timer);
+
+            // put overlay so the user will know the game ended
+            deckOverlay.classList.add('pointer_event');
+
+            //dispaly the pop up 
+
+            popUp.style.display = "block";
+
+            //The the score state after the game 
+
+            scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML + " moves made and " + " star rating of " + countMoves;
+
+            // If the customer pickes yes and wants to play again re-load the game 
+
+            ConfirmationButton(yesGameAgainButton,popUp);
+            RefuseButton(noGameAgainButton,popUp,deckOverlay);
+
+/*
+            yesGameAgainButton.addEventListener("click", function(e) {
+
+                window.location.reload();
+
+                // Hide the pop up 
+
+                popUp.style.display = "none";
+
+
+            });
+
+            // If the customer picks no , close the pop-up and hide the deck under the overlay
+
+            noGameAgainButton.addEventListener('click', function(e) {
+
+                // add the overlay again so the user will now he cannot play more
+                deckOverlay.classList.add("pointer_event");
+
+                // hide the winning pop-up
+                popUp.style.display = "none";
+
+                // disable the start button so that the user will not be able to click it and remove the 
+                // overlay and start the timer again 
+
+                document.querySelector("#start-game-button").classList.add('pointer_event');
+
+            });
+*/
+
+        }
+
+
+    });
+
+
 });
-
  
 
 
