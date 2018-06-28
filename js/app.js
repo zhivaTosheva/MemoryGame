@@ -114,13 +114,13 @@ var popUp = document.querySelector(".end-game-pop-up");
 
 var scoreMessage = document.querySelector(".game-results");
 
-var timePeriod =  document.querySelector('.timer');
-
-var timeEndScore = document.querySelector('.timer').innerHTML;
-
 var yesGameAgainButton = document.querySelector(".yes-restart-game");
 
 var noGameAgainButton = document.querySelector(".no-dont-restart");
+
+var starElements = document.querySelectorAll(".fa-star");
+
+var reload = document.querySelector(".restart");
 
 var openCards = [];
 
@@ -134,7 +134,9 @@ var countOfSeconds = 0;
 
 var middleTime = 0;
 
-var secondsForEveryMinute =0;
+var secondsForEveryMinute = 0;
+
+var currentStarCount = 0 ;
 
 var Timer;
 
@@ -166,6 +168,12 @@ startButton.addEventListener('click',function(e){
 });
 
 
+reload.addEventListener('click',function(e){
+
+	window.location.reload();
+
+});
+
 
 
 deckOfCards.forEach( function(singleCard){
@@ -179,6 +187,25 @@ deckOfCards.forEach( function(singleCard){
       var countOfMoves = document.querySelector(".moves");
       console.log(countOfMoves);
       countOfMoves.innerHTML = countMoves;
+      
+      if(countMoves === 16){
+  			starElements[0].classList.remove('fa-star');
+  			currentStarCount = 4;
+
+
+  		}else if(countMoves === 24){
+  			starElements[1].classList.remove('fa-star');
+  			currentStarCount = 3;
+
+  		}else if(countMoves === 28 ){
+
+  			starElements[2].classList.remove('fa-star');
+  			currentStarCount = 2;
+
+  		}else if(countMoves === 34){
+  			starElements[3].classList.remove('fa-star');
+  			currentStarCount = 1;
+  		}
 
 
   
@@ -265,7 +292,7 @@ deckOfCards.forEach( function(singleCard){
 			      	  openCards = [];
   				 	//checkForMatch = [];
 
-			      },800);
+			      },1000);
 
   			}
   			
@@ -275,6 +302,7 @@ deckOfCards.forEach( function(singleCard){
   	}
   		checkForMatch = [];
 
+
 // Check for end of the game - all cards should have been matched 
 
 		if(allMatchedCards.length===cards.length){
@@ -282,13 +310,11 @@ deckOfCards.forEach( function(singleCard){
 
 			//Stop the timer
 
-           
-            var finalTime = timeEndScore;
 
 			clearTimeout(Timer);
 
 		  // put overlay so the user will know the game ended
-		   deckOverlay.classList.add(".pointer_event");
+		   deckOverlay.classList.add('pointer_event');
 
 		  //dispaly the pop up 
 		 
@@ -296,13 +322,14 @@ deckOfCards.forEach( function(singleCard){
 
 		  //The the score state after the game 
 
-		  scoreMessage.innerHTML = "You won for the time period of " + finalTime + " with " + countOfMoves.innerHTML +" moves made and " + "stars" + " star rating";
+		  scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML +" moves made and " + " star rating of " + currentStarCount;
 
           // If the customer pickes yes and wants to play again re-load the game 
 
           yesGameAgainButton.addEventListener("click",function(e){
 
           	window.location.reload();
+            
             // Hide the pop up 
 
             popUp.style.display="none"; 
@@ -314,9 +341,16 @@ deckOfCards.forEach( function(singleCard){
 
           noGameAgainButton.addEventListener('click',function(e){
 
+          	// add the overlay again so the user will now he cannot play more
           	 deckOverlay.classList.add("pointer_event");
 
+          	// hide the winning pop-up
              popUp.style.display="none";
+
+             // disable the start button so that the user will not be able to click it and remove the 
+             // overlay and start the timer again 
+
+             document.querySelector(".start-game-button").classList.add('pointer_event');
 
           });
 
