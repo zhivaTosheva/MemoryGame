@@ -63,10 +63,14 @@ function buildCards() {
 
 		    }else {
 
+		    	// Get how many minutes you have 
 		    	middleTime = Math.floor(countOfSeconds/60);
 
 
 		    	if(middleTime < 4){
+
+		    		 // Ones you have the minutes , calculate back the seconds and dispaly them
+		    		 
 			    	secondsForEveryMinute = countOfSeconds - middleTime*60;
 
 			    	if(secondsForEveryMinute<10){
@@ -185,9 +189,7 @@ var Timer;
 var currentTimeValue =0;
 
 
-//scoreMessage.innerHTML = "Test";
 
-//start the game with clickin go the button and removing the overlay
 
 startButton.addEventListener('click', function(e) {
 
@@ -258,10 +260,11 @@ deckOfCards.forEach(function(singleCard) {
 
         if (openCards.length < 2) {
 
-            //prevent double click on the same card
+            
 
             if (singleCard.classList.contains('open')) {
 
+				//prevent double click on the same card
                 return;
 
             } else {
@@ -364,40 +367,7 @@ deckOfCards.forEach(function(singleCard) {
             ConfirmationButton(yesGameAgainButtonTime,popUpEndTime);
             RefuseButton(noGameAgainButtonTime,popUpEndTime,deckOverlay);
 
-  /*
-            yesGameAgainButtonTime.addEventListener("click", function(e) {
-
-                window.location.reload();
-
-                // Hide the pop up 
-
-                popUpEndTime.style.display = "none";
-
-
-            });
-
-            // If the customer picks no , close the pop-up and hide the deck under the overlay
-
-            noGameAgainButtonTime.addEventListener('click', function(e) {
-
-                // add the overlay again so the user will now he cannot play more
-                deckOverlay.classList.add("pointer_event");
-
-                // hide the winning pop-up
-                popUpEndTime.style.display = "none";
-
-                // disable the start button so that the user will not be able to click it and remove the 
-                // overlay and start the timer again 
-
-                document.querySelector("#start-game-button").classList.add('pointer_event');
-
-            });
-
-*/
-
-
-
-        }
+       }
 		
 
 		// Check for end of the game - all cards should have been matched 
@@ -418,42 +388,12 @@ deckOfCards.forEach(function(singleCard) {
 
             //The the score state after the game 
 
-            scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML + " moves made and " + " star rating of " + countMoves;
+            scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML + " moves made and " + " star rating of " + currentStarCount;
 
             // If the customer pickes yes and wants to play again re-load the game 
 
             ConfirmationButton(yesGameAgainButton,popUp);
             RefuseButton(noGameAgainButton,popUp,deckOverlay);
-
-/*
-            yesGameAgainButton.addEventListener("click", function(e) {
-
-                window.location.reload();
-
-                // Hide the pop up 
-
-                popUp.style.display = "none";
-
-
-            });
-
-            // If the customer picks no , close the pop-up and hide the deck under the overlay
-
-            noGameAgainButton.addEventListener('click', function(e) {
-
-                // add the overlay again so the user will now he cannot play more
-                deckOverlay.classList.add("pointer_event");
-
-                // hide the winning pop-up
-                popUp.style.display = "none";
-
-                // disable the start button so that the user will not be able to click it and remove the 
-                // overlay and start the timer again 
-
-                document.querySelector("#start-game-button").classList.add('pointer_event');
-
-            });
-*/
 
         }
 
@@ -463,9 +403,3 @@ deckOfCards.forEach(function(singleCard) {
 
 });
  
-
-
-//-------------------
-  // 1. Pop up box 
-  // 2. Starts
-//-------------------------
