@@ -70,7 +70,7 @@ function buildCards() {
 		    	if(middleTime < 4){
 
 		    		 // Ones you have the minutes , calculate back the seconds and dispaly them
-		    		 
+
 			    	secondsForEveryMinute = countOfSeconds - middleTime*60;
 
 			    	if(secondsForEveryMinute<10){
@@ -226,33 +226,9 @@ reload.addEventListener('click', function(e) {
 deckOfCards.forEach(function(singleCard) {
     singleCard.addEventListener('click', function(e) {
 
-        
-       // set move count and star update
-		
-        countMoves++;
-        console.log(countMoves);
-        var countOfMoves = document.querySelector(".moves");
-        console.log(countOfMoves);
-        countOfMoves.innerHTML = countMoves;
 
-        if (countMoves === 16) {
-            starElements[0].classList.remove('fa-star');
-            currentStarCount = 4;
+        // set move count and star update
 
-
-        } else if (countMoves === 24) {
-            starElements[1].classList.remove('fa-star');
-            currentStarCount = 3;
-
-        } else if (countMoves === 28) {
-
-            starElements[2].classList.remove('fa-star');
-            currentStarCount = 2;
-
-        } else if (countMoves === 34) {
-            starElements[3].classList.remove('fa-star');
-            currentStarCount = 1;
-        }
 
 
 
@@ -260,36 +236,59 @@ deckOfCards.forEach(function(singleCard) {
 
         if (openCards.length < 2) {
 
-            
+
 
             if (singleCard.classList.contains('open')) {
 
-				//prevent double click on the same card
-                return;
+                //prevent double click on the same card
+                return false;
 
             } else {
 
                 openCards.push(singleCard);
                 singleCard.classList.add('open', 'show');
-                
-            }
 
-        }
+                countMoves++;
+                console.log(countMoves);
+                var countOfMoves = document.querySelector(".moves");
+                console.log(countOfMoves);
+                countOfMoves.innerHTML = countMoves;
+
+                if (countMoves === 16) {
+                    starElements[0].classList.remove('fa-star');
+                    currentStarCount = 4;
 
 
-        // check for match 
-        openCards.forEach(function(clickedCard) {
+                } else if (countMoves === 24) {
+                    starElements[1].classList.remove('fa-star');
+                    currentStarCount = 3;
 
-            var cardDataSet = clickedCard.querySelector('i');
-            
-            var dataAtt = cardDataSet.dataset.additionalInfo;
-            
-            // use the checkForMatch array to add the data attributes and to compare them
+                } else if (countMoves === 28) {
 
-            checkForMatch.push(dataAtt);
-        });
-    
-        // if only one card is opened , close it 
+                    starElements[2].classList.remove('fa-star');
+                    currentStarCount = 2;
+
+                } else if (countMoves === 34) {
+                    starElements[3].classList.remove('fa-star');
+                    currentStarCount = 1;
+                }
+
+
+                // check for match 
+                openCards.forEach(function(clickedCard) {
+
+                    var cardDataSet = clickedCard.querySelector('i');
+
+                    var dataAtt = cardDataSet.dataset.additionalInfo;
+
+                    // use the checkForMatch array to add the data attributes and to compare them
+
+                    checkForMatch.push(dataAtt);
+                });
+
+
+                // if only one card is opened , close it --> not as per requirement
+                /*
         if (checkForMatch.length === 1) {
 
             console.log("The opened card is only one. You need to open two");
@@ -308,98 +307,105 @@ deckOfCards.forEach(function(singleCard) {
 
         } else if (checkForMatch.length > 1) {
 
-
-            // if two cards are opened, check for match
-
-            for (var i = 0; i < checkForMatch.length - 1; i++) {
+*/
 
 
-                if (checkForMatch[i] == checkForMatch[i + 1]) {
-                    console.log('they match');
+                // if two cards are opened, check for match
 
-                    openCards.forEach(function(matchedCard) {
-                        matchedCard.classList.add('match');
-
-                        // Add the founc matched elements to the final allMatchedCards array
-                        allMatchedCards.push(checkForMatch[i]);
+                for (var i = 0; i < checkForMatch.length - 1; i++) {
 
 
-                    });
+                    if (checkForMatch[i] == checkForMatch[i + 1]) {
+                        console.log('they match');
 
-                    // Clean the array to start new match anew
-                    openCards = [];
-                   
+                        openCards.forEach(function(matchedCard) {
+                            matchedCard.classList.add('match');
 
-                } else {
+                            // Add the founc matched elements to the final allMatchedCards array
+                            allMatchedCards.push(checkForMatch[i]);
 
-                    // close the cards
-                    console.log('try again');
 
-                    setTimeout(function() {
-                        openCards.forEach(function(notMatchedCards) {
-                            notMatchedCards.classList.remove('open', 'show');
                         });
+
+                        // Clean the array to start new match anew
                         openCards = [];
 
-                    }, 1200);
+
+                    } else {
+
+                        // close the cards
+                        console.log('try again');
+
+                        setTimeout(function() {
+                            openCards.forEach(function(notMatchedCards) {
+                                notMatchedCards.classList.remove('open', 'show');
+                            });
+                            openCards = [];
+
+                        }, 1200);
+
+                    }
+
 
                 }
+
+                //   }
+                checkForMatch = [];
+
+
+
+                // Check if the time has ended. If yes, show pop-up with the correct message
+                currentTimeValue = document.querySelector(".timer").innerHTML;
+
+                if (currentTimeValue == 'end') {
+
+                    console.log("end time");
+                    clearTimeout(Timer);
+                    deckOverlay.classList.add('pointer_event');
+
+                    popUpEndTime.style.display = "block";
+
+                    ConfirmationButton(yesGameAgainButtonTime, popUpEndTime);
+                    RefuseButton(noGameAgainButtonTime, popUpEndTime, deckOverlay);
+
+                }
+
+
+                // Check for end of the game - all cards should have been matched 
+                if (allMatchedCards.length === cards.length) {
+                    console.log("End of game");
+
+                    //Stop the timer
+
+
+                    clearTimeout(Timer);
+
+                    // put overlay so the user will know the game ended
+                    deckOverlay.classList.add('pointer_event');
+
+                    //dispaly the pop up 
+
+                    popUp.style.display = "block";
+
+                    //The the score state after the game 
+
+                    scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML + " moves made and " + " star rating of " + currentStarCount;
+
+                    // If the customer pickes yes and wants to play again re-load the game 
+
+                    ConfirmationButton(yesGameAgainButton, popUp);
+                    RefuseButton(noGameAgainButton, popUp, deckOverlay);
+
+                }
+
+
 
 
             }
 
         }
-        checkForMatch = [];
-
-
-
-        // Check if the time has ended. If yes, show pop-up with the correct message
-        currentTimeValue = document.querySelector(".timer").innerHTML;
-
-        if (currentTimeValue == 'end') {
-
-            console.log("end time");
-            clearTimeout(Timer);
-            deckOverlay.classList.add('pointer_event');
-
-            popUpEndTime.style.display = "block";
-
-            ConfirmationButton(yesGameAgainButtonTime,popUpEndTime);
-            RefuseButton(noGameAgainButtonTime,popUpEndTime,deckOverlay);
-
-       }
-		
-
-		// Check for end of the game - all cards should have been matched 
-        if (allMatchedCards.length === cards.length) {
-            console.log("End of game");
-
-            //Stop the timer
-
-
-            clearTimeout(Timer);
-
-            // put overlay so the user will know the game ended
-            deckOverlay.classList.add('pointer_event');
-
-            //dispaly the pop up 
-
-            popUp.style.display = "block";
-
-            //The the score state after the game 
-
-            scoreMessage.innerHTML = "You won for the time period of " + document.querySelector('.timer').innerHTML + " with " + countOfMoves.innerHTML + " moves made and " + " star rating of " + currentStarCount;
-
-            // If the customer pickes yes and wants to play again re-load the game 
-
-            ConfirmationButton(yesGameAgainButton,popUp);
-            RefuseButton(noGameAgainButton,popUp,deckOverlay);
-
-        }
-
 
     });
 
 
 });
- 
